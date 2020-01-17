@@ -13,17 +13,19 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 global $wpdb;
 
-// adds new schedule
-function cnc_add_cron_interval( $schedules ) {
-    if( ! isset( $schedules['nearly_twice_daily'] )) {
-        $schedules['nearly_twice_daily'] = array(
-            'interval' => 43259,
-            'display' => esc_html__( 'Nearly twice a day' ),
-        );
-    }
-    return $schedules;
- }
-add_filter( 'cron_schedules', 'cnc_add_cron_interval' );
+public static function activate() {
+    cnc_schedule_next_check();
+}
 
+public static function deactivate() {
+    wp_clear_scheduled_hook( 'cnc_check_cron_queue' );
+}
 
-add_action()
+public static function cnc_schedule_next_check(){
+    wp_schedule_single_event( time() + 43909, 'cnc_check_cron_queue' );
+}
+
+public static function cnc_check_cron_queue(){
+    
+    cnc_schedule_next_check();
+}
