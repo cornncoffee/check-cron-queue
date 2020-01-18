@@ -80,10 +80,15 @@ function cnc_ccq_dashboard(){
     }
 
     $average_overdue = round( $total_overdue / $records_total, 2 ); // decimal
+    $longest_delay = round( $longest_delay / 60, 2 ); // decimal
     $percentage_no_overdue = ( 100 * round( $records_no_overdue / $records_total, 2 ) ) . '%'; // string (percentage)
+    $last_check = date( 'Y-m-d H:i:s', $last_check );
 
     echo( "<p>Highest number of overdue events: $highest_overdue</p>" );
-
+    echo( "<p>Average number of overdue events: $average_overdue</p>" );
+    echo( "<p>Longest delay of an overdue event: $longest_delay minutes</p>" );
+    echo( "<p>Frequency of no overdue events: $percentage_no_overdue</p>" );
+    echo( "<p>Last check: $last_check</p>" );
 
 }
 
