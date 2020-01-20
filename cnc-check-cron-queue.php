@@ -119,7 +119,7 @@ function cnc_ccq_dashboard(){
             echo( "<p>$info_desc <em>$info_value</em></p>" );
         }
     }else{
-        echo( '<p>No data to display.</p>' );
+        printf( '<p>%s</p>', __( 'No data to display.' ) );
     }
 
 }
