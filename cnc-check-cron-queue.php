@@ -1,7 +1,7 @@
 <?php
 
 /* 
-    Plugin Name: Corn & Coffee Check Cron Queue
+    Plugin Name: Corn & Coffee - Check Cron Queue
     Plugin URI: 
     Description: Regularly checks how many cron jobs are overdue and keeps a history log.
     Version: 0.2.0
@@ -97,7 +97,7 @@ function cnc_ccq_check_cron_queue(){
         __( 'Highest number of events overdue:', 'cnc_check_cron_queue' )  => $highest_overdue,
         __( 'Average number of events overdue:', 'cnc_check_cron_queue' )  => $average_overdue,
         __( 'Longest delay of an overdue event:', 'cnc_check_cron_queue' ) => $longest_delay,
-        __( 'Frequency of no events overdue:', 'cnc_check_cron_queue' )    => $highest_overdue,
+        __( 'Frequency of no events overdue:', 'cnc_check_cron_queue' )    => $percentage_no_overdue,
         __( 'Last check:', 'cnc_check_cron_queue' )                        => $last_check,
     );
     update_option( 'cnc_ccq_current_info', $current_info );
