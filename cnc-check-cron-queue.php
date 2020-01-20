@@ -12,12 +12,12 @@
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 // PLUGIN SETTINGS -------------------------------------------------------------------------
-// Note that multiplying the two numbers below will give the span through which the data is relevant for
+// Note that multiplying the two numbers below will give you the time period in which the data was collected
 if( ! defined( 'CNC_CCQ_INTERVAL_CHECK' ) ){
     define( 'CNC_CCQ_INTERVAL_CHECK', 2 ); // every how many hours the check is run
 }
 if( ! defined( 'CNC_CCQ_HISTORY_LENGTH' ) ){
-    define( 'CNC_CCQ_HISTORY_LENGTH', 50 ); // how many readings should be kept in record
+    define( 'CNC_CCQ_HISTORY_LENGTH', 60 ); // how many readings should be kept in record
 }
 
 register_activation_hook( __FILE__, 'cnc_ccq_activation' );
@@ -37,11 +37,6 @@ function cnc_ccq_deactivation(){
 function cnc_ccq_uninstall(){
     delete_option( 'cnc_ccq_overdue_events_history' );
     delete_option( 'cnc_ccq_current_info' );
-}
-
-function cnc_ccq_schedule_next_check(){
-    $next_run = time() + (CNC_CCQ_INTERVAL_CHECK*60*60) + rand(0, 1*60*60); // rand() is for adding some randomness and try to cover all hours and minutes of the day.
-    wp_schedule_single_event( $next_run, 'cnc_ccq_check_cron_queue' );
 }
 
 function cnc_ccq_check_cron_queue(){
@@ -104,6 +99,11 @@ function cnc_ccq_check_cron_queue(){
 
     cnc_ccq_schedule_next_check();
     
+}
+
+function cnc_ccq_schedule_next_check(){
+    $next_run = time() + (CNC_CCQ_INTERVAL_CHECK*60*60) + rand(0, 1*60*60); // rand() is for adding some randomness and try to cover all hours and minutes of the day.
+    wp_schedule_single_event( $next_run, 'cnc_ccq_check_cron_queue' );
 }
 
 function cnc_ccq_create_dashboard_widget(){
