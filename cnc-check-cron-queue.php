@@ -12,7 +12,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 // PLUGIN SETTINGS -------------------------------------------------------------------------
-// Note that multiplying the two numbers below will give you the time period in which the data was collected
+// Note that multiplying the two numbers below will give you the time period for which the data was collected
 if( ! defined( 'CNC_CCQ_INTERVAL_CHECK' ) ){
     define( 'CNC_CCQ_INTERVAL_CHECK', 2 ); // every how many hours the check is run
 }
@@ -37,6 +37,11 @@ function cnc_ccq_deactivation(){
 function cnc_ccq_uninstall(){
     delete_option( 'cnc_ccq_overdue_events_history' );
     delete_option( 'cnc_ccq_current_info' );
+}
+
+function cnc_ccq_schedule_next_check(){
+    $next_run = time() + (CNC_CCQ_INTERVAL_CHECK*60*60) + rand(0, 1*60*60); // rand() is for adding some randomness and try to cover all hours and minutes of the day.
+    wp_schedule_single_event( $next_run, 'cnc_ccq_check_cron_queue' );
 }
 
 function cnc_ccq_check_cron_queue(){
@@ -85,8 +90,7 @@ function cnc_ccq_check_cron_queue(){
         $average_overdue = round( $total_overdue / $records_total, 2 ); // decimal
         $percentage_no_overdue = ( 100 * round( $records_no_overdue / $records_total, 2 ) ) . '%'; // string (percentage)
     }
-    $longest_delay = ( round( $longest_delay / 60, 2 ) ) . ' ' . __( 'minutes', 'cnc_check_cron_queue' ); // decimal
-    $last_check = date( 'Y-m-d H:i:s', $last_check ); // string (datetime)
+    $longest_delay = ( round( $longest_delay / 60, 2 ) ) . ' ' . __( 'minute(s)', 'cnc_check_cron_queue' ); // decimal
 
     $current_info = array(
         __( 'Highest number of events overdue:', 'cnc_check_cron_queue' )  => $highest_overdue,
@@ -101,11 +105,6 @@ function cnc_ccq_check_cron_queue(){
     
 }
 
-function cnc_ccq_schedule_next_check(){
-    $next_run = time() + (CNC_CCQ_INTERVAL_CHECK*60*60) + rand(0, 1*60*60); // rand() is for adding some randomness and try to cover all hours and minutes of the day.
-    wp_schedule_single_event( $next_run, 'cnc_ccq_check_cron_queue' );
-}
-
 function cnc_ccq_create_dashboard_widget(){
     wp_add_dashboard_widget( 'cnc_check_cron_queue', __( 'Info regarding your WP Cron events', 'cnc_check_cron_queue' ), 'cnc_ccq_dashboard' );
 }
@@ -115,11 +114,37 @@ function cnc_ccq_dashboard(){
     $cnc_ccq_current_info = get_option( 'cnc_ccq_current_info' );
 
     if ( $cnc_ccq_current_info ){
+        $cnc_ccq_current_info['Last check:'] = cnc_ccq_convert_time_to_period( $cnc_ccq_current_info['Last check:'] );
         foreach( $cnc_ccq_current_info as $info_desc => $info_value ){
             echo( "<p>$info_desc <em>$info_value</em></p>" );
         }
     }else{
         printf( '<p>%s</p>', __( 'No data to display.' ) );
     }
+
+}
+
+function cnc_ccq_convert_time_to_period( $last_check ){
+
+    $elapsed_time = time() - $last_check;
+
+    if ( 86400 <= $elapsed_time ){
+        $days = floor( $elapsed_time / 86400 );
+        $hours = floor( ( $elapsed_time % 86400 ) / 3600 );
+        $period = sprintf( '%u %s, %u %s %s', $days, __( 'day(s)', 'cnc_ccq_dashboard' ), $hours, __( 'hour(s)', 'cnc_ccq_dashboard' ), $hours, __( 'ago', 'cnc_ccq_dashboard' ) );
+    }elseif( 3600  <= $elapsed_time ){
+        $hours = floor( $elapsed_time / 3600 );
+        $minutes = floor( ( $elapsed_time % 3600 ) / 60 );
+        $period = sprintf( '%u %s, %u %s %s', $hours, __( 'hour(s)', 'cnc_ccq_dashboard' ), $minutes, __( 'minutes(s)', 'cnc_ccq_dashboard' ), $minutes, __( 'ago', 'cnc_ccq_dashboard' ) );
+    }elseif( 60 <= $elapsed_time ){
+        $minutes = floor( $elapsed_time / 60 );
+        $seconds = floor( $elapsed_time % 60 );
+        $period = sprintf( '%u %s, %u %s %s', $minutes, __( 'minute(s)', 'cnc_ccq_dashboard' ), $seconds, __( 'second(s)', 'cnc_ccq_dashboard' ), __( 'ago', 'cnc_ccq_dashboard' ) );
+    }else{
+        $seconds = $elapsed_time;
+        $period = sprintf( '%u %s %s', $seconds, __( 'second(s)', 'cnc_ccq_dashboard' ), __( 'ago', 'cnc_ccq_dashboard' ) );
+    }
+
+    return $period;
 
 }
