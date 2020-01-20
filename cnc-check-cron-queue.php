@@ -12,7 +12,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 // PLUGIN SETTINGS -------------------------------------------------------------------------
-// Note that multiplying the two numbers below will give you the time period for which the data was collected
+// Note that multiplying the two numbers below will give you the time period for which to collect data
 if( ! defined( 'CNC_CCQ_INTERVAL_CHECK' ) ){
     define( 'CNC_CCQ_INTERVAL_CHECK', 2 ); // every how many hours the check is run
 }
@@ -131,11 +131,11 @@ function cnc_ccq_convert_time_to_period( $last_check ){
     if ( 86400 <= $elapsed_time ){
         $days = floor( $elapsed_time / 86400 );
         $hours = floor( ( $elapsed_time % 86400 ) / 3600 );
-        $period = sprintf( '%u %s, %u %s %s', $days, __( 'day(s)', 'cnc_ccq_dashboard' ), $hours, __( 'hour(s)', 'cnc_ccq_dashboard' ), $hours, __( 'ago', 'cnc_ccq_dashboard' ) );
+        $period = sprintf( '%u %s, %u %s %s', $days, __( 'day(s)', 'cnc_ccq_dashboard' ), $hours, __( 'hour(s)', 'cnc_ccq_dashboard' ), __( 'ago', 'cnc_ccq_dashboard' ) );
     }elseif( 3600  <= $elapsed_time ){
         $hours = floor( $elapsed_time / 3600 );
         $minutes = floor( ( $elapsed_time % 3600 ) / 60 );
-        $period = sprintf( '%u %s, %u %s %s', $hours, __( 'hour(s)', 'cnc_ccq_dashboard' ), $minutes, __( 'minutes(s)', 'cnc_ccq_dashboard' ), $minutes, __( 'ago', 'cnc_ccq_dashboard' ) );
+        $period = sprintf( '%u %s, %u %s %s', $hours, __( 'hour(s)', 'cnc_ccq_dashboard' ), $minutes, __( 'minutes(s)', 'cnc_ccq_dashboard' ), __( 'ago', 'cnc_ccq_dashboard' ) );
     }elseif( 60 <= $elapsed_time ){
         $minutes = floor( $elapsed_time / 60 );
         $seconds = floor( $elapsed_time % 60 );
