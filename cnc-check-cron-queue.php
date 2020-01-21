@@ -4,7 +4,7 @@
     Plugin Name: Corn & Coffee - Check Cron Queue
     Plugin URI: 
     Description: Regularly checks how many cron jobs are overdue and keeps a history log.
-    Version: 0.2.0
+    Version: 0.2.1
     Author: Corn & Coffee
     Author URI: 
 */
@@ -12,9 +12,9 @@
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 // PLUGIN SETTINGS -------------------------------------------------------------------------
-// Note that multiplying the two numbers below will give you the time period for which to collect data
+// Note that multiplying the two numbers below will give you the time period for which to collect data.
 if( ! defined( 'CNC_CCQ_INTERVAL_CHECK' ) ){
-    define( 'CNC_CCQ_INTERVAL_CHECK', 2 ); // every how many hours the check is run
+    define( 'CNC_CCQ_INTERVAL_CHECK', 8 ); // every how many hours the check is run
 }
 if( ! defined( 'CNC_CCQ_HISTORY_LENGTH' ) ){
     define( 'CNC_CCQ_HISTORY_LENGTH', 60 ); // how many readings should be kept in record
@@ -40,7 +40,7 @@ function cnc_ccq_uninstall(){
 }
 
 function cnc_ccq_schedule_next_check(){
-    $next_run = time() + (CNC_CCQ_INTERVAL_CHECK*60*60) + rand(0, 1*60*60); // rand() is for adding some randomness and try to cover all hours and minutes of the day.
+    $next_run = time() + (CNC_CCQ_INTERVAL_CHECK*60*60) + rand(0, 3600); // rand() is for adding some randomness and trying to cover all hours and minutes of the day.
     wp_schedule_single_event( $next_run, 'cnc_ccq_check_cron_queue' );
 }
 
