@@ -2,11 +2,9 @@
 
 /* 
     Plugin Name: Corn & Coffee - Check Cron Queue
-    Plugin URI: 
-    Description: Regularly checks how many cron jobs are overdue and keeps a history log.
-    Version: 0.2.1
+    Description: Regularly checks how many cron jobs are overdue.
+    Version: 1.0.0
     Author: Corn & Coffee
-    Author URI: 
 */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
