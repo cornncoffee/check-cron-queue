@@ -15,7 +15,7 @@ if( ! defined( 'CNC_CCQ_INTERVAL_CHECK' ) ){
     define( 'CNC_CCQ_INTERVAL_CHECK', 8 ); // every how many hours the check is run
 }
 if( ! defined( 'CNC_CCQ_HISTORY_LENGTH' ) ){
-    define( 'CNC_CCQ_HISTORY_LENGTH', 60 ); // how many readings should be kept in record
+    define( 'CNC_CCQ_HISTORY_LENGTH', 20 ); // how many days of readings should be kept in record
 }
 
 register_activation_hook( __FILE__, 'cnc_ccq_activation' );
@@ -45,8 +45,9 @@ function cnc_ccq_schedule_next_check(){
 function cnc_ccq_check_cron_queue(){
     
     $cron_events = get_option( 'cron' );
-    $overdue_events_history = get_option( 'cnc_ccq_overdue_events_history' );
-    if( $overdue_events_history && CNC_CCQ_HISTORY_LENGTH <= count( $overdue_events_history ) ){
+	$overdue_events_history = get_option( 'cnc_ccq_overdue_events_history' );
+	$history_max_count = CNC_CCQ_INTERVAL_CHECK * CNC_CCQ_HISTORY_LENGTH;
+    if( $overdue_events_history && $history_max_count <= count( $overdue_events_history ) ){
         array_shift( $overdue_events_history );
     }
 
