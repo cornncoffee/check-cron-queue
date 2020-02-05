@@ -46,7 +46,7 @@ function cnc_ccq_check_cron_queue(){
     
     $cron_events = get_option( 'cron' );
 	$overdue_events_history = get_option( 'cnc_ccq_overdue_events_history' );
-	$history_max_count = CNC_CCQ_INTERVAL_CHECK * CNC_CCQ_HISTORY_LENGTH;
+	$history_max_count = ( 24 / CNC_CCQ_INTERVAL_CHECK ) * CNC_CCQ_HISTORY_LENGTH;
     if( $overdue_events_history && $history_max_count <= count( $overdue_events_history ) ){
         array_shift( $overdue_events_history );
     }

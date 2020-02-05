@@ -64,5 +64,5 @@ No, the plugin will just show you information that will help you detect abnormal
 
 == Changelog ==
 
-= 1.0 =
+= 1.0.0 =
 * First official version.
